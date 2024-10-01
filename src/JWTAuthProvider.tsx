@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { AuthUser, JWTAuthConfig, createJWTAuthContext } from './JWTAuthContext'
 import { JWTAuthController } from './JWTAuthController'
@@ -16,6 +16,7 @@ export function createJWTAuthProvider<UserProps extends AuthUser = AuthUser>() {
     const controller = new JWTAuthController(props.config)
 
     const { publicRoutes } = props.config
+    const pathname = usePathname();
 
     const [isLoggedIn, setLoggedIn] = useState<boolean | null>(null)
     const [user, setUser] = useState<UserProps | null>(null)
@@ -84,7 +85,7 @@ export function createJWTAuthProvider<UserProps extends AuthUser = AuthUser>() {
       }
 
       // Check if we are on the public route then skip the fetch
-      if (publicRoutes.includes(router.pathname)) {
+      if (publicRoutes.includes(pathname)) {
         return
       }
 
