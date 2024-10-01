@@ -15,6 +15,8 @@ export function createJWTAuthProvider<UserProps extends AuthUser = AuthUser>() {
     const router = useRouter()
     const controller = new JWTAuthController(props.config)
 
+    const { publicRoutes } = props.config
+
     const [isLoggedIn, setLoggedIn] = useState<boolean | null>(null)
     const [user, setUser] = useState<UserProps | null>(null)
 
@@ -78,6 +80,11 @@ export function createJWTAuthProvider<UserProps extends AuthUser = AuthUser>() {
 
     const fetchUser = async () => {
       if (props.config.endpoints.user === undefined) {
+        return
+      }
+
+      // Check if we are on the public route then skip the fetch
+      if (publicRoutes.includes(router.pathname)) {
         return
       }
 

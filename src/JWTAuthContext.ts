@@ -28,6 +28,7 @@ export type JWTAuthConfig = {
     refresh?: APIEndpoint
     user?: APIEndpoint
   }
+  publicRoutes: string[]
   pages: {
     login: AppEndpoint
   }
