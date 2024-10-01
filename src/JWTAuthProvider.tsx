@@ -32,11 +32,10 @@ export function createJWTAuthProvider<UserProps extends AuthUser = AuthUser>() {
       setUser(null)
       setLoggedIn(false)
 
-      if(fromFetchUser && publicRoutes.includes(pathname)) {
-        return
+      if(!fromFetchUser && !publicRoutes.includes(pathname)) {
+        navigateToLoginPage()
       }
-      
-      navigateToLoginPage()
+
       console.log('Next JWT auth error: ', error)
     }
 
