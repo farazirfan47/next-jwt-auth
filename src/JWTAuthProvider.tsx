@@ -25,14 +25,18 @@ export function createJWTAuthProvider<UserProps extends AuthUser = AuthUser>() {
 
     const navigateToLoginPage = () => router.push(props.config.pages.login.url)
 
-    const onError = (error: any) => {
+    const onError = (error: any, fromFetchUser = false) => {
       controller.onLogoutRequestComplete()
       controller.setAuthStateLoading(false)
 
       setUser(null)
       setLoggedIn(false)
-      navigateToLoginPage()
 
+      if(fromFetchUser && publicRoutes.includes(pathname)) {
+        return
+      }
+      
+      navigateToLoginPage()
       console.log('Next JWT auth error: ', error)
     }
 
@@ -84,11 +88,6 @@ export function createJWTAuthProvider<UserProps extends AuthUser = AuthUser>() {
         return
       }
 
-      // Check if we are on the public route then skip the fetch
-      if (publicRoutes.includes(pathname)) {
-        return
-      }
-
       try {
         const user = await controller.fetchUserProfile<UserProps>()
         controller.setAuthStateLoading(false)
@@ -100,7 +99,7 @@ export function createJWTAuthProvider<UserProps extends AuthUser = AuthUser>() {
           setLoggedIn(true)
         }
       } catch (error) {
-        onError(error)
+        onError(error, true)
       }
     }
 
